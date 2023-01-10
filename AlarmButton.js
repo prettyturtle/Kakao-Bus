@@ -4,7 +4,6 @@ import { COLOR } from "./color"
 
 export default ({
   onPress,
-  isBookmarked,
   style
 }) => {
   return (
@@ -12,9 +11,9 @@ export default ({
       onPress={onPress}
     >
       <Ionicons
-        name="star"
+        name="alarm-outline"
         size={24}
-        color={isBookmarked ? COLOR.YELLOW : COLOR.GRAY_1}
+        color={COLOR.GRAY_3}
         style={style}
       />
     </TouchableOpacity>
