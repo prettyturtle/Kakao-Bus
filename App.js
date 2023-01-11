@@ -1,15 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, SectionList, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BusInfo from './BusInfo';
 import { COLOR } from './color';
 import { busStop, getSections, getBusNumColorByType, getRemainedTimeText, getSeatStatusText } from './data';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import Margin from './Margin';
+import BookmarkButton from './BookmarkButton';
+
+const busStopBookmarkSize = 25
+const busStopBookmarkPadding = 5
 
 export default function App() {
   const sections = getSections(busStop.buses)
   const [now, setNow] = useState(dayjs())
-
+  const onPressBusStopBookmark = () => { }
+  
   useEffect(() => {
     const interval = setInterval(() => {
       const newNow = dayjs()
@@ -21,6 +28,65 @@ export default function App() {
     }
   }, [])
 
+  const ListHeaderComponent = () => {
+    return (
+      <SafeAreaView
+        style={{
+          backgroundColor: COLOR.GRAY_3,
+          height: 250
+        }}
+      >
+        {/* 뒤로가기, 홈 아이콘 */}
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <TouchableOpacity style={{ padding: 10 }}>
+            <SimpleLineIcons name="arrow-left" size={20} color={COLOR.WHITE} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ padding: 10 }}>
+            <SimpleLineIcons name="home" size={20} color={COLOR.WHITE} />
+          </TouchableOpacity>
+        </View>
+        {/* 정류소 번호, 이름, 방향 */}
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Margin height={10} />
+          <Text style={{ color: COLOR.WHITE, fontSize: 13 }}>{busStop.id}</Text>
+          <Margin height={4} />
+          <Text style={{ color: COLOR.WHITE, fontSize: 20 }}>{busStop.name}</Text>
+          <Margin height={4} />
+          <Text style={{ color: COLOR.GRAY_1, fontSize: 14 }}>{busStop.directionDescription}</Text>
+          <Margin height={20} />
+          {/* 북마크 */}
+          <BookmarkButton
+            size={busStopBookmarkSize}
+            isBookmarked={busStop.isBookmarked}
+            onPress={onPressBusStopBookmark}
+            style={{
+              borderWidth: 0.3,
+              borderColor: COLOR.GRAY_1,
+              borderRadius: (busStopBookmarkSize + busStopBookmarkPadding * 2) / 2,
+              padding: busStopBookmarkPadding
+            }}
+          />
+          <Margin height={25} />
+        </View>
+      </SafeAreaView>
+    )
+  }
+
+  const renderSectionHeader = ({ section: { title } }) => {
+    return (
+      <View style={{
+        paddingLeft: 13,
+        paddingVertical: 3,
+        backgroundColor: COLOR.GRAY_1,
+        borderTopWidth: 0.5,
+        borderBottomWidth: 0.5,
+        borderTopColor: COLOR.GRAY_2,
+        borderBottomColor: COLOR.GRAY_2
+      }}>
+        <Text style={{ fontSize: 12, color: COLOR.GRAY_4 }}>{title}</Text>
+      </View>
+    )
+  }
 
   const renderItem = ({ item: bus }) => {
     const numColor = getBusNumColorByType(bus.type)
@@ -55,17 +121,31 @@ export default function App() {
       />
     )
   }
-  return (
-    <SafeAreaView style={styles.container}>
 
+  const ItemSeparatorComponent = () => {
+    return (
+      <View style={{ width: "100%", height: 1, backgroundColor: COLOR.GRAY_1 }} />
+    )
+  }
+
+  const ListFooterComponent = () => {
+    return <Margin height={30} />
+  }
+
+  return (
+    <View style={styles.container}>
       <SectionList
         style={{ flex: 1, width: "100%" }}
         sections={sections}
-        renderSectionHeader={({ section: { title } }) => <Text>{title}</Text>}
+        ListHeaderComponent={ListHeaderComponent}
+        renderSectionHeader={renderSectionHeader}
         renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListFooterComponent={ListFooterComponent}
       />
-      <StatusBar style="auto" />
-    </SafeAreaView>
+
+      <StatusBar style="light" />
+    </View>
   );
 }
 
