@@ -4,11 +4,25 @@ import BusInfo from './BusInfo';
 import { COLOR } from './color';
 import { busStop, getSections, getBusNumColorByType, getRemainedTimeText, getSeatStatusText } from './data';
 import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 export default function App() {
+  const sections = getSections(busStop.buses)
+  const [now, setNow] = useState(dayjs())
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newNow = dayjs()
+      setNow(newNow)
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
+
 
   const renderItem = ({ item: bus }) => {
-    const now = dayjs()
     const numColor = getBusNumColorByType(bus.type)
 
     const firstNextBusInfo = bus.nextBusInfos?.[0] ?? null
@@ -41,7 +55,6 @@ export default function App() {
       />
     )
   }
-  const sections = getSections(busStop.buses)
   return (
     <SafeAreaView style={styles.container}>
 

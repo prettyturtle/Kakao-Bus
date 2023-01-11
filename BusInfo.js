@@ -29,9 +29,10 @@ export default ({
       </View>
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1 }}>
-        {processedNextBusInfos.map(info => (
+        {processedNextBusInfos.map((info, index) => (
             // M분 S초 / N번째 전 / 여유
             <NextBusInfo
+              key={index}
               hasInfo={info.hasInfo}
               remainedTimeText={info.remainedTimeText}
               numOfRemainedStops={info.numOfRemainedStops}
