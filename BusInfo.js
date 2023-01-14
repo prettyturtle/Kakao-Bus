@@ -25,7 +25,7 @@ export default ({
         {/* 버스 번호, 방향 */}
         <View style={{ flex: 1 }}>
           <Text style={{ color: numColor, fontSize: 20 }}>{num}</Text>
-          <Text style={{ color: COLOR.GRAY_3, fontSize: 13 }}>{directionDescription} 방향</Text>
+          <Text style={{ color: COLOR.GRAY_3, fontSize: 13, marginRight: 5 }}>{directionDescription} 방향</Text>
         </View>
       </View>
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
